@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
     const grid = document.querySelector(".grid");
-    const cells = Array.from(document.querySelectorAll(".grid div"));
+    let cells = Array.from(document.querySelectorAll(".grid div"));
     const startBtn = document.querySelector("#start-button");
+    let scoreDisplay = document.querySelector("#score")
 
     const width = 10;
     let nextRandom = 0;
@@ -92,6 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
         draw();
         freeze();
         displayShapes();
+        addScore();
     }
 
     function freeze() {
@@ -167,5 +169,25 @@ document.addEventListener("DOMContentLoaded", () => {
             displayShapes();
         }
     });
+
+    let score = 0;
+
+    function addScore() {
+        for (var i = 0; i < 199; i+=width) {
+            let row = [i, i+1, i+2, i+3, i+4, i+5, i+6, i+7, i+8, i+9];
+
+            if (row.every(index => cells[index].classList.contains("taken"))) {
+                score+= 10;
+                scoreDisplay.innerHTML = score
+                row.forEach(index => {
+                    cells[index].classList.remove('taken');
+                    cells[index].classList.remove('tetromino');
+                });
+                let cellsRemoved = cells.splice(i,width)
+                cells = cellsRemoved.concat(cells);
+                cells.forEach(cell => grid.appendChild(cell))
+            }
+        }
+    }
 });
 
